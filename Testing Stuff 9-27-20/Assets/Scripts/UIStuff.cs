@@ -6,17 +6,21 @@ using TMPro;
 
 public class UIStuff : MonoBehaviour
 {
-    public TextMeshProUGUI enemiesKilledText, waveNumText, accuracyText;
+    public TextMeshProUGUI enemiesKilledText, waveNumText, moneyText;
 
 
     GameManager gm;
     WaveManager wm;
+    GuyController gc;
+    GuyShooting gs;
 
     // Start is called before the first frame update
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
         wm = gm.GetComponent<WaveManager>();
+        gc = FindObjectOfType<GuyController>();
+        gs = gc.GetComponent<GuyShooting>();
     }
 
     // Update is called once per frame
@@ -24,8 +28,7 @@ public class UIStuff : MonoBehaviour
     {
         enemiesKilledText.text = "Enemies Killed: " + gm.enemiesKilled;
         waveNumText.text = "Wave: " + wm.waveNumber;
-        accuracyText.text = StatTracker.Accuracy().ToString("F2") + "%";
-        
+        moneyText.text = "Money: $" + gm.money;
 
 
     }

@@ -43,17 +43,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Start Wave"",
+                    ""name"": ""Show Store"",
                     ""type"": ""Button"",
-                    ""id"": ""b19c2fd6-5b8d-4dd4-b6a2-481b635fda55"",
+                    ""id"": ""025c7512-d481-443d-9ede-31b54cc2d8cb"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Show Store"",
+                    ""name"": ""Change Weapon"",
                     ""type"": ""Button"",
-                    ""id"": ""025c7512-d481-443d-9ede-31b54cc2d8cb"",
+                    ""id"": ""6e887818-43bf-4816-af35-b5fd8a99ffce"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -139,23 +139,23 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""04a966ca-4c70-45a7-89d9-81868ea66889"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Start Wave"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""f57a34ec-b7f0-4c46-8920-c2e05b55681f"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Show Store"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe5adfb7-0a21-483c-a92a-3ed1ae1b6573"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Change Weapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -169,8 +169,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
-        m_Player_StartWave = m_Player.FindAction("Start Wave", throwIfNotFound: true);
         m_Player_ShowStore = m_Player.FindAction("Show Store", throwIfNotFound: true);
+        m_Player_ChangeWeapon = m_Player.FindAction("Change Weapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -223,8 +223,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_MousePosition;
     private readonly InputAction m_Player_Shoot;
-    private readonly InputAction m_Player_StartWave;
     private readonly InputAction m_Player_ShowStore;
+    private readonly InputAction m_Player_ChangeWeapon;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -232,8 +232,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
-        public InputAction @StartWave => m_Wrapper.m_Player_StartWave;
         public InputAction @ShowStore => m_Wrapper.m_Player_ShowStore;
+        public InputAction @ChangeWeapon => m_Wrapper.m_Player_ChangeWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -252,12 +252,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Shoot.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShoot;
-                @StartWave.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStartWave;
-                @StartWave.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStartWave;
-                @StartWave.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStartWave;
                 @ShowStore.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShowStore;
                 @ShowStore.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShowStore;
                 @ShowStore.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShowStore;
+                @ChangeWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeWeapon;
+                @ChangeWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeWeapon;
+                @ChangeWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeWeapon;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -271,12 +271,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
-                @StartWave.started += instance.OnStartWave;
-                @StartWave.performed += instance.OnStartWave;
-                @StartWave.canceled += instance.OnStartWave;
                 @ShowStore.started += instance.OnShowStore;
                 @ShowStore.performed += instance.OnShowStore;
                 @ShowStore.canceled += instance.OnShowStore;
+                @ChangeWeapon.started += instance.OnChangeWeapon;
+                @ChangeWeapon.performed += instance.OnChangeWeapon;
+                @ChangeWeapon.canceled += instance.OnChangeWeapon;
             }
         }
     }
@@ -286,7 +286,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
-        void OnStartWave(InputAction.CallbackContext context);
         void OnShowStore(InputAction.CallbackContext context);
+        void OnChangeWeapon(InputAction.CallbackContext context);
     }
 }

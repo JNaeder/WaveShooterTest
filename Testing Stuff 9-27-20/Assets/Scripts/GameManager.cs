@@ -6,13 +6,20 @@ public class GameManager : MonoBehaviour
 {
     public int enemiesKilled;
     public int enemiesSpawned;
+    public float money;
+
 
     public enum GameState {onWave, offWave, buying}
     public GameState currentGameState;
 
+
+    WaveManager wm;
+
     // Start is called before the first frame update
     void Start()
     {
+        wm = GetComponent<WaveManager>();
+
         currentGameState = GameState.offWave;
     }
     
@@ -29,6 +36,12 @@ public class GameManager : MonoBehaviour
 
     public void SetGameState(GameState newState) {
         currentGameState = newState;
+    }
+
+    public void StartWave() {
+        currentGameState = GameState.onWave;
+        wm.StartSpawning();
+
     }
 
 

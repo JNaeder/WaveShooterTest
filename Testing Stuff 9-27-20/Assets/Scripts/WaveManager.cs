@@ -8,9 +8,15 @@ public class WaveManager : MonoBehaviour
 
     EnemySpawner es;
     GameManager gm;
+    GuyController gc;
 
     public bool isInWave;
     int alreadySpawned;
+    private void Awake()
+    {
+        gc = FindObjectOfType<GuyController>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +36,7 @@ public class WaveManager : MonoBehaviour
                 es.IsSpawning(false);
                 isInWave = false;
                 alreadySpawned = gm.enemiesSpawned;
+                gm.SetGameState(GameManager.GameState.offWave);
             }
         }
     }
@@ -40,7 +47,6 @@ public class WaveManager : MonoBehaviour
         waveNumber++;
         es.IsSpawning(true);
         isInWave = true;
-        Debug.Log("Start Wave");
     }
 
     int SpawnAmount()

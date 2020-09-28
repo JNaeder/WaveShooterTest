@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 9059015943806282561}
   - component: {fileID: 8148674880849760225}
   - component: {fileID: 753045259957155242}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -50,6 +50,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 5
+  moneyPickup: {fileID: 5640243462316225037, guid: 12b397db244c248559fe3c08c6c94f9d, type: 3}
+  moneyDropRadius: 3
 --- !u!61 &851929645163420191
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -150,7 +152,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   centerOffsetCompatibility: NaN
   orientation: 1
-  enableRotation: 0
+  enableRotation: 1
   targetCompatibility: {fileID: 0}
   maxAcceleration: -2.5
   rotationSpeed: 360
@@ -185,7 +187,7 @@ GameObject:
   m_Component:
   - component: {fileID: 851929645312242980}
   - component: {fileID: 851929645312242981}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

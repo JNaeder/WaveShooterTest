@@ -5,13 +5,10 @@ using UnityEngine;
 public class GuyShooting : MonoBehaviour
 {
     public GameObject crosshairPrefab;
-    public GameObject bulletPrefab;
     public Transform arm;
     public Transform muzzle;
 
-    public float bulletSpeed = 5f;
-    [Range(1,20)]
-    public float fireRate = 1f;
+    public Gun currentGun;
 
 
     bool isShooting;
@@ -33,25 +30,28 @@ public class GuyShooting : MonoBehaviour
         gc.controls.Player.Shoot.performed += _ => SetShootBool(true);
         gc.controls.Player.Shoot.canceled += _ => SetShootBool(false);
 
-        
+
     }
     // Start is called before the first frame update
     void Start()
     {
         crosshair = Instantiate(crosshairPrefab, MousePosition(), Quaternion.identity);
+
+
     }
+
 
     // Update is called once per frame
     void Update()
     {
         if (gm.currentGameState == GameManager.GameState.offWave || gm.currentGameState == GameManager.GameState.onWave) {
-                UpdateCrosshair();
-                RotateArm();
+            UpdateCrosshair();
+            RotateArm();
 
-                if (isShooting) {
-                    Shooting();
-                }
+            if (isShooting) {
+                Shooting();
             }
+        }
     }
 
     void UpdateCrosshair()
@@ -60,18 +60,40 @@ public class GuyShooting : MonoBehaviour
     }
 
     void Shooting() {
-        float newRate = 1/ fireRate;
-        if (Time.time > shootTime + newRate) {
-            Shoot();
-            shootTime = Time.time;
+        // If Gun is Continuous
+        if (currentGun.fireMethod == Gun.FireMethod.continuous)
+        {
+            float newRate = 1 / currentGun.fireRate;
+
+            if (Time.time > shootTime + newRate && currentGun.currentAmmo > 0)
+            {
+                Shoot();
+                shootTime = Time.time;
+            }
         }
+        else if (currentGun.fireMethod == Gun.FireMethod.single) {
+            if (currentGun.currentAmmo > 0)
+            {
+                Shoot();
+                SetShootBool(false);
+            }
+        }
+
+        
+        
     }
 
     void Shoot() {
-        GameObject bullet = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity) as GameObject;
-        Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
-        bulletRB.velocity = ShootDirection() * bulletSpeed;
-        StatTracker.shotsFired++;
+       
+        if (currentGun.fireMethod == Gun.FireMethod.single || currentGun.fireMethod == Gun.FireMethod.continuous)
+        {
+            GameObject bullet = Instantiate(currentGun.bulletPrefab, muzzle.position, Quaternion.identity) as GameObject;
+            Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
+            bulletRB.velocity = FireMethods.StraightShot(muzzle.position, MousePosition()) * currentGun.bulletSpeed;
+            StatTracker.shotsFired++;
+            currentGun.currentAmmo--;
+        }
+        
     }
 
     void RotateArm() {
@@ -86,12 +108,7 @@ public class GuyShooting : MonoBehaviour
         Vector2 mousePos = mainCam.ScreenToWorldPoint(gc.controls.Player.MousePosition.ReadValue<Vector2>());
         return mousePos;
     }
-    Vector2 ShootDirection() {
-        Vector2 dir = MousePosition() - new Vector2(transform.position.x, transform.position.y);
-        return dir.normalized;
-    }
     void SetShootBool(bool newBool) {
-
         isShooting = newBool;
         shootTime = Time.time;
     }
