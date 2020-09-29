@@ -19,7 +19,7 @@ TagManager:
   - Enemy Cover
   - Enemy
   - Player
-  - 
+  - Bullet
   - 
   - 
   - 
@@ -42,4 +42,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 1820825119
     locked: 0

@@ -231,7 +231,6 @@ MonoBehaviour:
   arm: {fileID: 3816531351699403517}
   muzzle: {fileID: 3816531352989489263}
   currentGun: {fileID: 11400000, guid: 3ff422e2b06184ba7b411e5776d31d41, type: 2}
-  ammo: 100
 --- !u!50 &389819040
 Rigidbody2D:
   serializedVersion: 4
@@ -293,7 +292,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunInventory:
   - {fileID: 11400000, guid: 3ff422e2b06184ba7b411e5776d31d41, type: 2}
-  - {fileID: 11400000, guid: 5e2bbaf2911d3418a89035f4a6eddf11, type: 2}
 --- !u!1 &3816531352931101378
 GameObject:
   m_ObjectHideFlags: 0

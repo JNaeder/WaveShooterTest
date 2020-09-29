@@ -8,8 +8,13 @@ public class Gun : ScriptableObject
     public string gunName;
     public Sprite gunImage;
 
+    public int startAmmo;
     public int maxAmmo;
     public int currentAmmo;
+    public int clipCapcity;
+    public int currentClip;
+
+
     public float bulletSpeed;
 
     [Range(1, 20)]

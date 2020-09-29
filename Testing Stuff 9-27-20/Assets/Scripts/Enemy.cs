@@ -40,8 +40,8 @@ public class Enemy : MonoBehaviour
     }
     
 
-    public void TakeDamage() {
-        health--;
+    public void TakeDamage(float damageAmount) {
+        health -= damageAmount;
     }
 
     void DropMoney() {

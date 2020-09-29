@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunName: Pistol_1
   gunImage: {fileID: 21300000, guid: 515043df713fb46bcaffe7db68d25287, type: 3}
-  maxAmmo: 50
-  currentAmmo: 0
+  startAmmo: 50
+  maxAmmo: 500
+  currentAmmo: -10
+  clipCapcity: 10
+  currentClip: 10
   bulletSpeed: 15
   fireRate: 1
   bulletPrefab: {fileID: 9142465055157334806, guid: ff903bc3943bdfd4295e14ead7919f4c, type: 3}

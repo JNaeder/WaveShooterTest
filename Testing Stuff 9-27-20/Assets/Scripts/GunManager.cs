@@ -13,9 +13,6 @@ public class GunManager : MonoBehaviour
     {
         gs = GetComponent<GuyShooting>();
         gc = GetComponent<GuyController>();
-
-
-        
     }
 
 
@@ -27,7 +24,8 @@ public class GunManager : MonoBehaviour
 
         foreach (Gun g in gunInventory)
         {
-            g.currentAmmo = g.maxAmmo;
+            g.currentAmmo = g.startAmmo;
+            g.currentClip = g.clipCapcity;
         }
 
         SetCurrentGun(0);
@@ -36,14 +34,19 @@ public class GunManager : MonoBehaviour
 
 
     public void AddGun(Gun newGun) {
-        gunInventory.Add(newGun);
-
+            gunInventory.Add(newGun);
+            newGun.currentAmmo = newGun.startAmmo;
+            newGun.currentClip = newGun.clipCapcity;
+            ChangeToNewestGun();
     }
 
     void ChangeToNextWeapon() {
-        Debug.Log("Change Weapon");
         SetCurrentGun(CurrentGunIndex() + 1);
+    }
 
+    void ChangeToNewestGun()
+    {
+        SetCurrentGun(gunInventory.Count - 1);
     }
 
     void SetCurrentGun(int gunIndex) {
@@ -54,18 +57,27 @@ public class GunManager : MonoBehaviour
 
     int CurrentGunIndex() {
         int gunIndex = 0;
-
         for (int i = 0; i < gunInventory.Count; i++)
         {
             if (gs.currentGun == gunInventory[i]) {
                 gunIndex = i;
-                Debug.Log("Current Gun Index is " + gunIndex);
-
                 if (gunIndex >= gunInventory.Count - 1) {
                     gunIndex = -1;
                 }
             }
         }
         return gunIndex;
+    }
+
+
+    public bool GunExists(Gun thisGun) {
+        bool doesExist = false;
+        foreach (Gun g in gunInventory)
+        {
+            if (g == thisGun) {
+                doesExist = true;
+            }
+        }
+        return doesExist;
     }
 }

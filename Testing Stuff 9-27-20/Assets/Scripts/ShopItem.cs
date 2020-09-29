@@ -39,22 +39,30 @@ public class ShopItem : MonoBehaviour
         if (gm.money >= item.itemCost)
         {
             gs.currentGun.currentAmmo += newAmmo;
+            gm.money -= item.itemCost;
+        }
+        else
+        {
+            Debug.Log("Not Enough Money");
         }
     }
 
     public void AddGun() {
-        gunM.AddGun(item.gunItem);
-    }
-
-    public void SpendMoney() {
         if (gm.money >= item.itemCost)
         {
-            gm.money -= item.itemCost;
+            if (!gunM.GunExists(item.gunItem))
+            {
+                gunM.AddGun(item.gunItem);
+                gm.money -= item.itemCost;
+            }
+            else
+            {
+                Debug.Log("Gun Already In Inventory");
+            }
         }
         else {
-            Debug.Log("Not enough Money!");
-
+            Debug.Log("Not Enough Money");
         }
-
     }
+    
 }

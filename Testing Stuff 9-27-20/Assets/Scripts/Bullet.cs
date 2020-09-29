@@ -5,12 +5,12 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
 
+    public float damageAmount;
+
     StatTracker st;
 
     private void Start()
     {
-        
-
         StartCoroutine(DestroyBullet());
     }
 
@@ -27,7 +27,7 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             Enemy newEnemy = collision.gameObject.GetComponent<Enemy>();
-            newEnemy.TakeDamage();
+            newEnemy.TakeDamage(damageAmount);
             Destroy(gameObject);
             StatTracker.shotsHit++;
         }
