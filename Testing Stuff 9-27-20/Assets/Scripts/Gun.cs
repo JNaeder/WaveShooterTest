@@ -15,6 +15,7 @@ public class Gun : ScriptableObject
     public int currentAmmo;
     public int clipCapcity;
     public int currentClip;
+    public float reloadTime;
 
 
     public float bulletSpeed;

@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 460690659263408636}
   - component: {fileID: 1388494852961234086}
   m_Layer: 5
-  m_Name: Shop Item
+  m_Name: Shop Item_Ammo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,12 +355,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1388494852961234086}
         m_TargetAssemblyTypeName: ShopItem, Assembly-CSharp
-        m_MethodName: AddGun
-        m_Mode: 1
+        m_MethodName: AddAmmo
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 50
           m_FloatArgument: 25
           m_StringArgument: 
           m_BoolArgument: 0
@@ -377,7 +377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1f61cea488604095bcad53ce9890458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 0015a0a31ce3f4d3e8416b509257e99d, type: 2}
   itemImage: {fileID: 1260714310628643773}
   itemName: {fileID: 601628588}
   itemCost: {fileID: 134159325}

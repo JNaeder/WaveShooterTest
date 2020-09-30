@@ -9,9 +9,14 @@ public class GuyShooting : MonoBehaviour
 
     public Gun currentGun;
 
+    public GameObject reloadingBar;
+    public Transform reloadingBarFront;
+
 
     bool isShooting;
     float shootTime;
+    bool isReloading;
+    float reloadTime;
 
 
     GuyController gc;
@@ -28,7 +33,7 @@ public class GuyShooting : MonoBehaviour
 
         gc.controls.Player.Shoot.performed += _ => SetShootBool(true);
         gc.controls.Player.Shoot.canceled += _ => SetShootBool(false);
-        gc.controls.Player.Reload.performed += _ => Reload();
+        gc.controls.Player.Reload.performed += _ => StartReload();
 
 
     }
@@ -36,12 +41,19 @@ public class GuyShooting : MonoBehaviour
     void Start()
     {
         crosshair = Instantiate(crosshairPrefab, MousePosition(), Quaternion.identity);
+        reloadingBar.SetActive(false);
     }
 
 
     // Update is called once per frame
     void Update()
     {
+
+        Debug.Log(isShooting);
+        if (isReloading)
+        {
+            Reloading();
+        }
 
         if (gm.currentGameState == GameManager.GameState.offWave || gm.currentGameState == GameManager.GameState.onWave) {
             UpdateCrosshair();
@@ -83,10 +95,19 @@ public class GuyShooting : MonoBehaviour
         if (currentGun.fireMethod == Gun.FireMethod.continuous)
         {
             float newRate = 1 / currentGun.fireRate;
-            if (Time.time > shootTime + newRate && currentGun.currentClip > 0)
+            if (Time.time > shootTime + newRate)
             {
-                Shoot();
-                shootTime = Time.time;
+                if (currentGun.currentClip > 0)
+                {
+                    Shoot();
+                    shootTime = Time.time;
+                }
+                else {
+                    if (!isReloading)
+                    {
+                        StartReload();
+                    }
+                }
             }
         }
         // If Gun In Single Shot
@@ -96,12 +117,16 @@ public class GuyShooting : MonoBehaviour
                 Shoot();
                 SetShootBool(false);
             }
+            else {
+                if (!isReloading)
+                {
+                    StartReload();
+                }
+            }
         }
     }
 
     void Shoot() {
-
-
         if (currentGun.fireMethod == Gun.FireMethod.single || currentGun.fireMethod == Gun.FireMethod.continuous)
         {
             GameObject bullet = Instantiate(currentGun.bulletPrefab, MuzzlePos(), FireMethods.BulletRotation(MousePosition(), MuzzlePos())) as GameObject;
@@ -119,10 +144,7 @@ public class GuyShooting : MonoBehaviour
                 StatTracker.shotsFired++;
                 currentGun.currentClip--;
             }
-
-
         }
-        
     }
 
     void Reload()
@@ -175,14 +197,46 @@ public class GuyShooting : MonoBehaviour
         return mousePos;
     }
     void SetShootBool(bool newBool) {
-        isShooting = newBool;
-        shootTime = Time.time;
+        
+            isShooting = newBool;
+            shootTime = Time.time;
+
     }
 
     Vector3 MuzzlePos() {
         GunObject currentGunObject = gunHolder.GetComponentInChildren<GunObject>();
         Vector3 newPos = currentGunObject.muzzle.position;
         return newPos;
+    }
+
+
+    void StartReload() {
+        Debug.Log("Start Reload");
+        if (currentGun.currentClip < currentGun.clipCapcity)
+        {
+            isReloading = true;
+            reloadTime = Time.time;
+            reloadingBar.SetActive(true);
+        }
+    }
+
+    void Reloading() {
+        
+            if (Time.time > reloadTime + currentGun.reloadTime)
+            {
+                Reload();
+                isReloading = false;
+                reloadingBar.SetActive(false);
+            }
+            else
+            {
+                float reloadPerc = (Time.time - reloadTime) / currentGun.reloadTime;
+                Vector3 reloadBarScale = reloadingBarFront.localScale;
+                reloadBarScale.x = reloadPerc;
+                reloadingBarFront.localScale = reloadBarScale;
+            }
+
+
     }
 
     
