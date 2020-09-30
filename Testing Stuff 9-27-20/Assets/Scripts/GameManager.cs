@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     public int enemiesKilled;
     public int enemiesSpawned;
     public float money;
+    public float health;
+    public float shields;
 
 
     public enum GameState {onWave, offWave, buying}

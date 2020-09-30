@@ -5,8 +5,7 @@ using UnityEngine;
 public class GuyShooting : MonoBehaviour
 {
     public GameObject crosshairPrefab;
-    public Transform arm;
-    public Transform muzzle;
+    public Transform gunHolder;
 
     public Gun currentGun;
 
@@ -43,13 +42,35 @@ public class GuyShooting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (gm.currentGameState == GameManager.GameState.offWave || gm.currentGameState == GameManager.GameState.onWave) {
             UpdateCrosshair();
-            RotateArm();
+            RotateGun();
             if (isShooting) {
                 Shooting();
             }
         }
+
+
+
+    }
+
+    public void ChangeGunObject(GunObject theGun) {
+        GameObject oldGun = gunHolder.GetComponentInChildren<GunObject>().gameObject;
+        if (oldGun != null) {
+            Destroy(oldGun);
+        }
+        if (MousePosition().x > transform.position.x)
+        {
+            GameObject newGun = Instantiate(theGun.gameObject, gunHolder.position, gunHolder.rotation) as GameObject;
+            newGun.transform.parent = gunHolder;
+        }
+        else if (MousePosition().x < transform.position.x) {
+            GameObject newGun = Instantiate(theGun.gameObject, gunHolder.position, gunHolder.rotation) as GameObject;
+            newGun.transform.localScale = new Vector3(1, -1, 1);
+            newGun.transform.parent = gunHolder;
+        }
+        
     }
 
     void UpdateCrosshair()
@@ -69,7 +90,7 @@ public class GuyShooting : MonoBehaviour
             }
         }
         // If Gun In Single Shot
-        else if (currentGun.fireMethod == Gun.FireMethod.single || currentGun.fireMethod == Gun.FireMethod.threeShot) {
+        else if (currentGun.fireMethod == Gun.FireMethod.single || currentGun.fireMethod == Gun.FireMethod.multiShot) {
             if (currentGun.currentClip > 0)
             {
                 Shoot();
@@ -80,20 +101,21 @@ public class GuyShooting : MonoBehaviour
 
     void Shoot() {
 
+
         if (currentGun.fireMethod == Gun.FireMethod.single || currentGun.fireMethod == Gun.FireMethod.continuous)
         {
-            GameObject bullet = Instantiate(currentGun.bulletPrefab, muzzle.position, Quaternion.identity) as GameObject;
+            GameObject bullet = Instantiate(currentGun.bulletPrefab, MuzzlePos(), FireMethods.BulletRotation(MousePosition(), MuzzlePos())) as GameObject;
             Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
-            bulletRB.velocity = FireMethods.StraightShot(muzzle.position, MousePosition()) * currentGun.bulletSpeed;
+            bulletRB.velocity = bullet.transform.up * currentGun.bulletSpeed;
             StatTracker.shotsFired++;
             currentGun.currentClip--;
         }
-        else if (currentGun.fireMethod == Gun.FireMethod.threeShot) {
-            for (int i = 0; i < 3; i++)
+        else if (currentGun.fireMethod == Gun.FireMethod.multiShot) {
+            for (int i = 0; i < currentGun.multiShotNumberOfShots; i++)
             {
-                GameObject bullet = Instantiate(currentGun.bulletPrefab, muzzle.position, Quaternion.identity) as GameObject;
+                GameObject bullet = Instantiate(currentGun.bulletPrefab, MuzzlePos(), FireMethods.MultiBulletRotation(MousePosition(), MuzzlePos(), currentGun.multiShotSpreadAngle, currentGun.multiShotNumberOfShots, i)) as GameObject;
                 Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
-                bulletRB.velocity = FireMethods.ThreeShot(i, muzzle.position, MousePosition()) * currentGun.bulletSpeed;
+                bulletRB.velocity = bullet.transform.up * currentGun.bulletSpeed;
                 StatTracker.shotsFired++;
                 currentGun.currentClip--;
             }
@@ -120,7 +142,7 @@ public class GuyShooting : MonoBehaviour
                     currentGun.currentClip = currentGun.currentAmmo;
                     currentGun.currentAmmo = 0;
                 }
-                Debug.Log("Reloaded");
+                Debug.Log("Reloaded " + currentGun.gunName);
             }
             else
             {
@@ -132,11 +154,20 @@ public class GuyShooting : MonoBehaviour
         }
     }
 
-    void RotateArm() {
+    void RotateGun() {
         Vector3 diff = MousePosition() - new Vector2(transform.position.x, transform.position.y);
         diff.Normalize();
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        arm.rotation = Quaternion.Euler(0f, 0f, rot_z - 45);
+
+        if (MousePosition().x > transform.position.x)
+        {
+            gunHolder.localScale = new Vector3(1, 1, 1);
+            gunHolder.rotation = Quaternion.Euler(0f, 0f, rot_z);
+        }
+        else if (MousePosition().x < transform.position.x) {
+            gunHolder.localScale = new Vector3(1, -1, 1);
+            gunHolder.rotation = Quaternion.Euler(0f, 0f, rot_z);
+        }
     }
 
     Vector2 MousePosition() {
@@ -146,6 +177,12 @@ public class GuyShooting : MonoBehaviour
     void SetShootBool(bool newBool) {
         isShooting = newBool;
         shootTime = Time.time;
+    }
+
+    Vector3 MuzzlePos() {
+        GunObject currentGunObject = gunHolder.GetComponentInChildren<GunObject>();
+        Vector3 newPos = currentGunObject.muzzle.position;
+        return newPos;
     }
 
     

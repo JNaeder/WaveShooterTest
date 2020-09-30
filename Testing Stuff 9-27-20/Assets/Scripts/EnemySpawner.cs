@@ -60,4 +60,9 @@ public class EnemySpawner : MonoBehaviour
     public void IsSpawning(bool newBool) {
         isSpawning = newBool;
     }
+
+    public void SetSpawnFrequency(float newFreq) {
+        spawnFrequency = newFreq;
+
+    }
 }

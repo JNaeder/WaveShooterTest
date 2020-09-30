@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moneyAmount: 10
-  getRadius: 3
+  getRadius: 5
   moveSpeed: 15
   playerLayer:
     serializedVersion: 2

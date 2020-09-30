@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Ammo
   m_EditorClassIdentifier: 
   itemName: Ammo
-  itemCost: 25
+  itemCost: 75
   itemImage: {fileID: 21300000, guid: 43f076aabc8ef824b850dc9790c3e542, type: 3}
+  gunItem: {fileID: 0}

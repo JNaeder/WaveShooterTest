@@ -51,7 +51,7 @@ public class GunManager : MonoBehaviour
 
     void SetCurrentGun(int gunIndex) {
         gs.currentGun = gunInventory[gunIndex];
-
+        gs.ChangeGunObject(gunInventory[gunIndex].gunObject);
     }
 
 

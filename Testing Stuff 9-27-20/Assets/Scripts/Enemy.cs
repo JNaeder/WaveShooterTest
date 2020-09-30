@@ -6,8 +6,14 @@ using Pathfinding;
 public class Enemy : MonoBehaviour
 {
     public float health = 10f;
+    public float attackDamage = 0.5f;
     public GameObject moneyPickup;
     public float moneyDropRadius;
+
+    public Transform healthBarTop;
+    public GameObject healthBar;
+
+    float startHealth;
 
     AIDestinationSetter setter;
     GameManager gm;
@@ -18,12 +24,14 @@ public class Enemy : MonoBehaviour
         gm = FindObjectOfType<GameManager>();
         setter = GetComponent<AIDestinationSetter>();
         setter.target = FindObjectOfType<GuyController>().transform;
+        startHealth = health;
     }
 
     // Update is called once per frame
     void Update()
     {
         CheckHealth();
+        SetHealthBar();
     }
 
     void CheckHealth() {
@@ -55,6 +63,22 @@ public class Enemy : MonoBehaviour
 
         }
 
+    }
+
+
+    void SetHealthBar() {
+        float healthPerc = health / startHealth;
+        if (healthPerc == 1)
+        {
+            healthBar.SetActive(false);
+        }
+        else
+        {
+            healthBar.SetActive(true);
+            Vector3 healthBarScale = healthBarTop.localScale;
+            healthBarScale.x = healthPerc;
+            healthBarTop.localScale = healthBarScale;
+        }
     }
 
 

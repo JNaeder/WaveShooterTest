@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f58c0aa706c4ed0bed98b9695040a2, type: 3}
+  m_Name: Super Gun
+  m_EditorClassIdentifier: 
+  gunObject: {fileID: 1147861294763611711, guid: 005e8dfbf9224408bb81913d63cb9289, type: 3}
+  gunName: Super Gun
+  gunImage: {fileID: 21300000, guid: 65f4d4db1b45862468d0e9dccdf087c1, type: 3}
+  startAmmo: 20
+  maxAmmo: 100
+  currentAmmo: 20
+  clipCapcity: 5
+  currentClip: 5
+  bulletSpeed: 10
+  fireRate: 1
+  bulletPrefab: {fileID: 9142465055157334806, guid: 0c542a0eb1347f242a875f518e16b886, type: 3}
+  fireMethod: 0
+  multiShotSpreadAngle: 0
+  multiShotNumberOfShots: 0

@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Gun", menuName = "New Gun")]
 public class Gun : ScriptableObject
 {
+    public GunObject gunObject;
+
     public string gunName;
     public Sprite gunImage;
 
@@ -22,10 +24,11 @@ public class Gun : ScriptableObject
 
     public GameObject bulletPrefab;
 
-    public enum FireMethod {single, continuous, threeShot}
+    public enum FireMethod {single, continuous, multiShot}
     public FireMethod fireMethod;
 
-    public bool holdShot;
+    public float multiShotSpreadAngle;
+    public int multiShotNumberOfShots;
 
     
 
