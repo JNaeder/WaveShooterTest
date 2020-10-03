@@ -17,9 +17,10 @@ MonoBehaviour:
   gunImage: {fileID: 21300000, guid: 65f4d4db1b45862468d0e9dccdf087c1, type: 3}
   startAmmo: 100
   maxAmmo: 1000
-  currentAmmo: 88
+  currentAmmo: 200
   clipCapcity: 12
-  currentClip: 12
+  currentClip: 11
+  reloadTime: 3
   bulletSpeed: 10
   fireRate: 1
   bulletPrefab: {fileID: 9142465055157334806, guid: 0c542a0eb1347f242a875f518e16b886, type: 3}

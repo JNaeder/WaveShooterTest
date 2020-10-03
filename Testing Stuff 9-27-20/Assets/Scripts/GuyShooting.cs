@@ -17,6 +17,7 @@ public class GuyShooting : MonoBehaviour
     float shootTime;
     bool isReloading;
     float reloadTime;
+    bool steadyHasStarded;
 
 
     GuyController gc;
@@ -24,6 +25,7 @@ public class GuyShooting : MonoBehaviour
     Camera mainCam;
 
     GameObject crosshair;
+    GameObject steadyBullet;
 
     private void Awake()
     {
@@ -48,8 +50,6 @@ public class GuyShooting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        Debug.Log(isShooting);
         if (isReloading)
         {
             Reloading();
@@ -82,7 +82,7 @@ public class GuyShooting : MonoBehaviour
             newGun.transform.localScale = new Vector3(1, -1, 1);
             newGun.transform.parent = gunHolder;
         }
-        
+
     }
 
     void UpdateCrosshair()
@@ -92,7 +92,7 @@ public class GuyShooting : MonoBehaviour
 
     void Shooting() {
         // If Gun is Continuous
-        if (currentGun.fireMethod == Gun.FireMethod.continuous)
+        if (currentGun.fireMethod == Gun.FireMethod.Automatic)
         {
             float newRate = 1 / currentGun.fireRate;
             if (Time.time > shootTime + newRate)
@@ -102,7 +102,8 @@ public class GuyShooting : MonoBehaviour
                     Shoot();
                     shootTime = Time.time;
                 }
-                else {
+                else
+                {
                     if (!isReloading)
                     {
                         StartReload();
@@ -111,23 +112,49 @@ public class GuyShooting : MonoBehaviour
             }
         }
         // If Gun In Single Shot
-        else if (currentGun.fireMethod == Gun.FireMethod.single || currentGun.fireMethod == Gun.FireMethod.multiShot) {
+        else if (currentGun.fireMethod == Gun.FireMethod.Single)
+        {
             if (currentGun.currentClip > 0)
             {
                 Shoot();
                 SetShootBool(false);
             }
-            else {
+            else
+            {
                 if (!isReloading)
                 {
                     StartReload();
                 }
             }
+
         }
+        // If Gun Is Burst
+        else if (currentGun.fireMethod == Gun.FireMethod.Burst)
+        {
+            float newRate = 1 / currentGun.fireRate;
+            if (currentGun.currentClip > 0)
+            {
+                StartCoroutine(BurstMethod(newRate, currentGun.burstAmount));
+            }
+            else if (!isReloading)
+            {
+                StartReload();
+            }
+        }
+        // If Steady
+        else if (currentGun.fireMethod == Gun.FireMethod.Steady) {
+            if (!steadyHasStarded)
+            {
+                Shoot();
+                steadyHasStarded = true;
+            }
+            UpdateSteadyBulletPosition(MuzzlePos(), gunHolder.rotation);
+        }
+
     }
 
     void Shoot() {
-        if (currentGun.fireMethod == Gun.FireMethod.single || currentGun.fireMethod == Gun.FireMethod.continuous)
+        if (currentGun.bulletMethod == Gun.BulletMethod.Single)
         {
             GameObject bullet = Instantiate(currentGun.bulletPrefab, MuzzlePos(), FireMethods.BulletRotation(MousePosition(), MuzzlePos())) as GameObject;
             Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
@@ -135,15 +162,20 @@ public class GuyShooting : MonoBehaviour
             StatTracker.shotsFired++;
             currentGun.currentClip--;
         }
-        else if (currentGun.fireMethod == Gun.FireMethod.multiShot) {
+        else if (currentGun.bulletMethod == Gun.BulletMethod.Multi)
+        {
             for (int i = 0; i < currentGun.multiShotNumberOfShots; i++)
             {
                 GameObject bullet = Instantiate(currentGun.bulletPrefab, MuzzlePos(), FireMethods.MultiBulletRotation(MousePosition(), MuzzlePos(), currentGun.multiShotSpreadAngle, currentGun.multiShotNumberOfShots, i)) as GameObject;
                 Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
                 bulletRB.velocity = bullet.transform.up * currentGun.bulletSpeed;
                 StatTracker.shotsFired++;
-                currentGun.currentClip--;
             }
+            currentGun.currentClip--;
+        }
+        else if (currentGun.bulletMethod == Gun.BulletMethod.Steady) {
+            steadyBullet = Instantiate(currentGun.bulletPrefab, MuzzlePos(), gunHolder.rotation) as GameObject;
+
         }
     }
 
@@ -164,15 +196,8 @@ public class GuyShooting : MonoBehaviour
                     currentGun.currentClip = currentGun.currentAmmo;
                     currentGun.currentAmmo = 0;
                 }
-                Debug.Log("Reloaded " + currentGun.gunName);
+                
             }
-            else
-            {
-                Debug.Log("Already Full Clip");
-            }
-        }
-        else {
-            Debug.Log("Out Of Ammo");
         }
     }
 
@@ -196,10 +221,26 @@ public class GuyShooting : MonoBehaviour
         Vector2 mousePos = mainCam.ScreenToWorldPoint(gc.controls.Player.MousePosition.ReadValue<Vector2>());
         return mousePos;
     }
+
+
     void SetShootBool(bool newBool) {
-        
+        if (!isReloading)
+        {
             isShooting = newBool;
             shootTime = Time.time;
+        }
+        else {
+            isShooting = false;
+        }
+
+
+        if (newBool == false) {
+            if (currentGun.fireMethod == Gun.FireMethod.Steady) {
+                DestroySteadyBullet();
+                steadyHasStarded = false;
+            }
+
+        }
 
     }
 
@@ -211,38 +252,57 @@ public class GuyShooting : MonoBehaviour
 
 
     void StartReload() {
-        Debug.Log("Start Reload");
-        if (currentGun.currentClip < currentGun.clipCapcity)
+        if (!isReloading && currentGun.currentAmmo > 0)
         {
-            isReloading = true;
-            reloadTime = Time.time;
-            reloadingBar.SetActive(true);
+            if (currentGun.currentClip < currentGun.clipCapcity)
+            {
+                isReloading = true;
+                reloadTime = Time.time;
+                reloadingBar.SetActive(true);
+            }
         }
     }
 
     void Reloading() {
-        
-            if (Time.time > reloadTime + currentGun.reloadTime)
-            {
-                Reload();
-                isReloading = false;
-                reloadingBar.SetActive(false);
-            }
-            else
-            {
-                float reloadPerc = (Time.time - reloadTime) / currentGun.reloadTime;
-                Vector3 reloadBarScale = reloadingBarFront.localScale;
-                reloadBarScale.x = reloadPerc;
-                reloadingBarFront.localScale = reloadBarScale;
-            }
 
-
+        if (Time.time > reloadTime + currentGun.reloadTime)
+        {
+            Reload();
+            isReloading = false;
+            reloadingBar.SetActive(false);
+        }
+        else
+        {
+            float reloadPerc = (Time.time - reloadTime) / currentGun.reloadTime;
+            Vector3 reloadBarScale = reloadingBarFront.localScale;
+            reloadBarScale.x = reloadPerc;
+            reloadingBarFront.localScale = reloadBarScale;
+        }
     }
 
-    
+    public void CancelReload() {
+        isReloading = false;
+        reloadingBar.SetActive(false);
+    }
 
-    
+    IEnumerator BurstMethod(float fireRate, int burstNum) {
+        for (int i = 0; i < burstNum; i++)
+        {
+            Shoot();
+            SetShootBool(false);
+            yield return new WaitForSeconds(fireRate);
+            SetShootBool(true);
+        }
+        SetShootBool(false);
+    }
 
+    void DestroySteadyBullet() {
+        Destroy(steadyBullet);
+    }
 
+    void UpdateSteadyBulletPosition(Vector3 pos, Quaternion rot) {
+        steadyBullet.transform.position = pos;
+        steadyBullet.transform.rotation = rot;
 
+    }
 }

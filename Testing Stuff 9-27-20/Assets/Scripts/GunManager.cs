@@ -8,11 +8,13 @@ public class GunManager : MonoBehaviour
 
     GuyShooting gs;
     GuyController gc;
+    GameManager gm;
 
     private void Awake()
     {
         gs = GetComponent<GuyShooting>();
         gc = GetComponent<GuyController>();
+        gm = FindObjectOfType<GameManager>();
     }
 
 
@@ -41,7 +43,11 @@ public class GunManager : MonoBehaviour
     }
 
     void ChangeToNextWeapon() {
-        SetCurrentGun(CurrentGunIndex() + 1);
+        if (gm.currentGameState != GameManager.GameState.buying)
+        {
+            gs.CancelReload();
+            SetCurrentGun(CurrentGunIndex() + 1);
+        }
     }
 
     void ChangeToNewestGun()

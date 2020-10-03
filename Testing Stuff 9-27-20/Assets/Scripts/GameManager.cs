@@ -41,8 +41,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void StartWave() {
-        currentGameState = GameState.onWave;
-        wm.StartSpawning();
+        if (!wm.isInWave)
+        {
+            currentGameState = GameState.onWave;
+            wm.StartSpawning();
+        }
 
     }
 

@@ -24,6 +24,8 @@ MonoBehaviour:
   bulletSpeed: 15
   fireRate: 1
   bulletPrefab: {fileID: 9142465055157334806, guid: ff903bc3943bdfd4295e14ead7919f4c, type: 3}
+  bulletMethod: 0
   fireMethod: 0
   multiShotSpreadAngle: 0
   multiShotNumberOfShots: 0
+  burstAmount: 0

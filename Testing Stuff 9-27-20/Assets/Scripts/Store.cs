@@ -5,22 +5,22 @@ using UnityEngine.InputSystem;
 
 public class Store : MonoBehaviour
 {
-    public GameObject startWaveButton;
-    public GameObject StoreUI;
+    public GameObject startWaveInfo;
 
     GameManager gm;
     GuyController gc;
     GunManager gunM;
+    StoreUI storeUI;
 
-    bool isInStore;
+    [HideInInspector]
+    public bool isInStore;
 
     private void Awake()
     {
         gm = FindObjectOfType<GameManager>();
         gc = FindObjectOfType<GuyController>();
         gunM = gc.GetComponent<GunManager>();
-
-        
+        storeUI = FindObjectOfType<StoreUI>();
     }
 
     private void Start()
@@ -29,12 +29,10 @@ public class Store : MonoBehaviour
     }
 
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
         if (collision.gameObject.tag == "Player") {
-            startWaveButton.SetActive(true);
+            startWaveInfo.SetActive(true);
             isInStore = true;
         }
     }
@@ -44,34 +42,12 @@ public class Store : MonoBehaviour
         
         if (collision.gameObject.tag == "Player")
         {
-            startWaveButton.SetActive(false);
+            startWaveInfo.SetActive(false);
             isInStore = false;
         }
     }
 
-
-    public void ShowStoreUI() {
-        Cursor.visible = true;
-        if (isInStore)
-        {
-            StoreUI.SetActive(true);
-            gm.SetGameState(GameManager.GameState.buying);
-        }
-    }
-
-    public void HideStoreUI() {
-        Cursor.visible = false;
-        StoreUI.SetActive(false);
-        gm.SetGameState(GameManager.GameState.offWave);
-    }
-
-    public void StartWave() {
-        if (isInStore) {
-            gm.StartWave();
-        }
-    }
-
-    public void AddGun(Gun newGun) {
-        gunM.AddGun(newGun);
+    void ShowStoreUI() {
+        storeUI.ShowStoreUI();
     }
 }

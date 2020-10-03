@@ -181,6 +181,8 @@ MonoBehaviour:
   crosshairPrefab: {fileID: 7631189499721213057, guid: f596f8f1e588dc94392e56d1309a3664, type: 3}
   gunHolder: {fileID: 3816531351699403517}
   currentGun: {fileID: 11400000, guid: 3ff422e2b06184ba7b411e5776d31d41, type: 2}
+  reloadingBar: {fileID: 2129496313557907681}
+  reloadingBarFront: {fileID: 125721036801563076}
 --- !u!50 &389819040
 Rigidbody2D:
   serializedVersion: 4
@@ -255,11 +257,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startHealth: 3
-  startShields: 10
-  invincibleTime: 5
+  startShields: 1
+  invincibleTime: 2
   isInvincible: 0
-  invincibleColor: {r: 0, g: 0, b: 0, a: 0}
-  sp: {fileID: 0}
+  invincibleColor: {r: 1, g: 0, b: 0, a: 0.6392157}
+  sp: {fileID: 3816531352931101376}
 --- !u!1 &3816531352931101378
 GameObject:
   m_ObjectHideFlags: 0

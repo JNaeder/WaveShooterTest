@@ -10,17 +10,21 @@ public class ShopItem : MonoBehaviour
     GuyController gc;
     GuyShooting gs;
     GunManager gunM;
+    StoreUI storeUI;
 
     public Item item;
     public Image itemImage;
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemCost;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
         gc = FindObjectOfType<GuyController>();
+        storeUI = FindObjectOfType<StoreUI>();
         gs = gc.GetComponent<GuyShooting>();
         gunM = gc.GetComponent<GunManager>();
 
@@ -64,5 +68,12 @@ public class ShopItem : MonoBehaviour
             Debug.Log("Not Enough Money");
         }
     }
+
+    public void SelectThisItem() {
+        storeUI.SelectItem(item);
+    }
+
+
+    
     
 }
