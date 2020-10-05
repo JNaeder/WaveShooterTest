@@ -7,7 +7,11 @@ public class GuyController : MonoBehaviour
 {
     public PlayerControls controls;
 
+    Animator anim;
+
     WaveManager wm;
+    GuyMovement guyM;
+    GuyShooting gs;
 
 
 
@@ -15,6 +19,9 @@ public class GuyController : MonoBehaviour
     {
         controls = new PlayerControls();
         wm = FindObjectOfType<WaveManager>();
+        guyM = GetComponent<GuyMovement>();
+        gs = GetComponent<GuyShooting>();
+        anim = GetComponent<Animator>();
         
     }
 
@@ -36,7 +43,13 @@ public class GuyController : MonoBehaviour
 
     private void Update()
     {
-       
+        UpdateAnimator();   
+    }
+
+    void UpdateAnimator() {
+        anim.SetFloat("x", gs.MousePosition().x - transform.position.x);
+        anim.SetFloat("y", gs.MousePosition().y - transform.position.y);
+
     }
 
 

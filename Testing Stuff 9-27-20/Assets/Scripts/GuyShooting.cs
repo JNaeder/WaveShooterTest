@@ -217,7 +217,7 @@ public class GuyShooting : MonoBehaviour
         }
     }
 
-    Vector2 MousePosition() {
+   public Vector2 MousePosition() {
         Vector2 mousePos = mainCam.ScreenToWorldPoint(gc.controls.Player.MousePosition.ReadValue<Vector2>());
         return mousePos;
     }

@@ -132,7 +132,7 @@ public class ItemManager : MonoBehaviour
 
     public void ChooseFilterOption(int newOption)
     {
-        if (newOption == 0) { UnFilterItems(); }
+        if (newOption == 0) { UnFilterItems(); SetSortValue(currentSortIndex); }
         else {ShowFilterOptions(newOption - 1); }
     }
 
@@ -157,7 +157,12 @@ public class ItemManager : MonoBehaviour
         else if (newVal == 2) { tempFireMethod = Gun.FireMethod.Automatic; }
         else if (newVal == 3) { tempFireMethod = Gun.FireMethod.Burst; }
         else if (newVal == 4) { tempFireMethod = Gun.FireMethod.Steady; }
-        else { UnFilterItems();}
+        else {
+            UnFilterItems();
+            SetSortValue(currentSortIndex);
+            return;
+        }
+
             foreach (Item item in itemList)
             {
                 if (item.gunItem.fireMethod == tempFireMethod)
@@ -175,7 +180,12 @@ public class ItemManager : MonoBehaviour
         Bullet.AmmoType newAmmoType = Bullet.AmmoType.Earth;
         if (newVal == 1) { newAmmoType = Bullet.AmmoType.Earth; }
         else if (newVal == 2) { newAmmoType = Bullet.AmmoType.Energy; }
-        else { UnFilterItems(); }
+        else {
+            UnFilterItems();
+            SetSortValue(currentSortIndex);
+            return;
+        }
+
         foreach (Item item in itemList)
         {
             Bullet.AmmoType newBullet = item.gunItem.bulletPrefab.GetComponent<Bullet>().bulletAmmoType;
@@ -190,7 +200,6 @@ public class ItemManager : MonoBehaviour
         HideAllFilterOptions();
         DestroyCurrentList();
         tempList = new List<Item>(itemList);
-        SetSortValue(currentSortIndex);
         foreach (TMP_Dropdown d in filterDropDowns){d.value = 0;}
     }
 

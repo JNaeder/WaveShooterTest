@@ -8,6 +8,8 @@ public class GuyMovement : MonoBehaviour
     public Transform leftCheck, rightCheck, topCheck, bottomCheck;
     public LayerMask objectLayer;
 
+    
+
     GuyController gc;
     GameManager gm;
 
@@ -27,8 +29,13 @@ public class GuyMovement : MonoBehaviour
     }
 
     void Movement() {
+        transform.position += WallChecks(MoveDir()) * speed * Time.deltaTime;
+    }
+
+
+    public Vector2 MoveDir() {
         Vector2 moveDir = gc.controls.Player.Movement.ReadValue<Vector2>();
-        transform.position += WallChecks(moveDir) * speed * Time.deltaTime;
+        return moveDir;
     }
 
 
